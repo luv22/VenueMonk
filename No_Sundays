@@ -1,0 +1,89 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    private static int SUNDAY = 0;
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int t = in.nextInt();
+        while (t-- > 0) {
+            
+            long[][] date_array = new long[2][3];
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 3; j++) {
+                    date_array[i][j] = in.nextLong();
+                }
+            }
+
+            adjust(date_array);
+
+            long ak = 0;
+            while (true) {
+                if (date_array[0][2] == 1) {
+                    if (is_Chk(date_array[0][0], date_array[0][1], date_array[0][2])) {
+                        ak++;
+                    }
+                }
+
+                date_array[0][2] = 1;
+
+                date_array[0][1]++;
+                if (date_array[0][1] > 12) {
+                    date_array[0][1] = 1;
+                    date_array[0][0]++;
+                }
+                if (is_ovr_date(date_array)) {
+                    break;
+                }
+            }
+            System.out.println(ak);
+        }
+        in.close();
+    }
+
+
+    private static boolean is_ovr_date(long[][] date_array) {
+        if (date_array[0][0] > date_array[1][0]) {
+            return true;
+        } else if (date_array[0][0] == date_array[1][0]) {
+            if (date_array[0][1] > date_array[1][1]) {
+                return true;
+            } else if (date_array[0][1] == date_array[1][1]) {
+                if (date_array[0][2] > date_array[1][2])
+                    return true;
+            }
+        }
+        return false;
+    }
+
+
+    private static void adjust(long[][] date_array) {
+        if (is_ovr_date(date_array)) {
+            exchange(date_array);
+        }
+    }
+
+
+    private static void exchange(long[][] date_array) {
+        long[] tmp = new long[3];
+        tmp = date_array[1];
+        date_array[1] = date_array[0];
+        date_array[0] = tmp;
+    }
+
+    private static boolean is_Chk(long year, long month, long day) {
+
+        if (month < 3) {
+            month += 12;
+            year -= 1;
+        }
+        long c = year / 100;
+        long y = year % 100;
+        int w = (int) ((y + (y / 4) + (c / 4) - (2 * c) + ((26 * (month + 1)) / 10) + day - 1) % 7);
+        boolean t = w == SUNDAY;
+
+        return t;
+    }
+}
