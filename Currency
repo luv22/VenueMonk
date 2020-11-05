@@ -1,1 +1,39 @@
 
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    static long ans = 0;
+
+    public static void main(String[] args) {
+      
+       int p = 2000;
+        long[] dp = new long[2001];
+        int notes[]  = {10,20,50,100,200,500,1000,2000};
+        ways= solve(p,dp,notes);
+        System.out.println(ways);
+
+    }
+
+    public static  long solve(int p,long[] dp,int [] ways) {
+
+          if(p==0){
+              return 1;
+          }
+        if(p<0){
+            return 0;
+        }
+        if(dp[p]!=0){
+            return dp[p];
+        }
+
+        for(int i=7;i>=0;i--){
+
+            dp[p] +=solve(p-ways[i],dp,ways);
+        }
+        // System.out.println(ans);
+        //dp[p]=ans;
+        return dp[p];
+
+    }
+}
